@@ -119,17 +119,23 @@ def params2dict(args):
 def printInfo(msg):
     fh=str(datetime.datetime.now())
     print(fh + Colores.fg.green + " [INFO] " + msg + Colores.reset)
-    return 1
+    return 0
 
 def printError(msg):
     fh=str(datetime.datetime.now())
     print(fh + Colores.fg.red + " [ERROR] " + msg + Colores.reset)
-    return 1
+    return 0
 
 def printWarning(msg):
     fh=str(datetime.datetime.now())
     print(fh + Colores.fg.yellow + " [WARNING] " + msg + Colores.reset)
-    return 1
+    return 0
+
+def printLog(msg):
+    fh=str(datetime.datetime.now())
+    print(fh  + " [INFO] " + msg )
+    return 0
+
 
 ###################################################################################
 # API Calls to Prism Central

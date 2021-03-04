@@ -15,7 +15,7 @@ Parameters:
 
 
 Options:
-   archivo : nombre del aarchivo excel, no es necesario la extensión .xlsx, si no 
+   archivo : nombre del archivo excel, no es necesario la extensión .xlsx, si no 
    está en el nombre, se agregará automáticamente.
    help    : display this text as help.
 
@@ -101,7 +101,8 @@ pl={"kind":"project"}
 
 try:
     info_proyectos = Prism_API_Call("POST",comURL,PrismCreds,pl)
-    print(json.dumps(info_proyectos, indent=2))
+    # Control: está rescatando lo correcto?
+    #print(json.dumps(info_proyectos, indent=2))
 
 except:
         printError("Something get wrong, finishing")
@@ -126,16 +127,47 @@ i=0
 t = {}
 tabla_proyectos = {}
 while i < int(info_proyectos["metadata"]["length"]):
-    print(info_proyectos["entities"][i]["status"]["name"])
-    t["nombre"]=info_proyectos["entities"][i]["status"]["name"]
-    t["owner"]=info_proyectos["entities"][i]["status"]["description"]
-    t["vcpu_uso"]=0
+    nombre_proyecto = info_proyectos["entities"][i]["status"]["name"]
+    print(Colores.fg.green + "Proyecto: " + nombre_proyecto + Colores.reset)
+    
+    if nombre_proyecto.lower() == "default":
+        print("Proyecto default no se tomará en cuenta.")
+        i+=1
+        continue
+    
+    #t["nombre"]=info_proyectos["entities"][i]["status"]["name"]
+    t["nombre"] = nombre_proyecto
+    t["owner"]  = info_proyectos["entities"][i]["status"]["description"]
 
-    print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"])
-    print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]))
+    if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) == 0:
+        t["vcpu_uso"] = 0
+        t["vcpu_total"] = 0
+        t["mem_uso"] = 0
+        t["mem_total"] = 0
+        t["hdd_uso"] = 0
+        t["hdd_total"] = 0
+        i+=1
+    else:
+        print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"])
+        #print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]))
+        if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) > 0:
+            if "resources" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"].keys():
+                #print(type(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
+                print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
+                if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]) > 0:
+                    for nn  in range (0,len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"])):
+                        #print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
+                        if "limits" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys():
+                            total = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["limits"]
+                        else:
+                            total = 0 
+                        uso = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["value"]
+                        #if ""
 
+                       
 
-    i+=1 
+                    
+        i+=1 
 
 
 #  with open(pars['sourcecsv']) as csv_file:
