@@ -139,13 +139,14 @@ while i < int(info_proyectos["metadata"]["length"]):
     t["nombre"] = nombre_proyecto
     t["owner"]  = info_proyectos["entities"][i]["status"]["description"]
 
+    t["vcpu_uso"] = 0
+    t["vcpu_total"] = 0
+    t["mem_uso"] = 0
+    t["mem_total"] = 0
+    t["hdd_uso"] = 0
+    t["hdd_total"] = 0
+
     if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) == 0:
-        t["vcpu_uso"] = 0
-        t["vcpu_total"] = 0
-        t["mem_uso"] = 0
-        t["mem_total"] = 0
-        t["hdd_uso"] = 0
-        t["hdd_total"] = 0
         i+=1
     else:
         print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"])
@@ -156,17 +157,24 @@ while i < int(info_proyectos["metadata"]["length"]):
                 print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
                 if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]) > 0:
                     for nn  in range (0,len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"])):
-                        #print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
+                        print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
                         if "limits" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys():
                             total = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["limits"]
                         else:
                             total = 0 
                         uso = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["value"]
-                        #if ""
-
-                       
-
-                    
+                        if info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["resource_type"] == "VCPUS":
+                            t["vcpu_uso"] = uso
+                            t["vcpu_total"] = total
+                            continue
+                        if info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["resource_type"] == "MEMORY":
+                            t["mem_uso"] = uso
+                            t["mem_total"] = total
+                            continue
+                        if info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["resource_type"] == "STORAGE":
+                            t["hdd_uso"] = uso
+                            t["hdd_total"] = total
+                            continue
         i+=1 
 
 
