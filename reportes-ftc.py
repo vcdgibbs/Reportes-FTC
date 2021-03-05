@@ -126,19 +126,22 @@ except:
 i=0
 t = {}
 tabla_proyectos = {}
+
+##  Llenar la tabla de proyectos:
+
 while i < int(info_proyectos["metadata"]["length"]):
     nombre_proyecto = info_proyectos["entities"][i]["status"]["name"]
     print(Colores.fg.green + "Proyecto: " + nombre_proyecto + Colores.reset)
     
     if nombre_proyecto.lower() == "default":
-        print("Proyecto default no se tomará en cuenta.")
+        print("Proyecto default se excluye del reporte.")
         i+=1
         continue
     
     #t["nombre"]=info_proyectos["entities"][i]["status"]["name"]
     t["nombre"] = nombre_proyecto
     t["owner"]  = info_proyectos["entities"][i]["status"]["description"]
-
+    t["vms"] = 0
     t["vcpu_uso"] = 0
     t["vcpu_total"] = 0
     t["mem_uso"] = 0
@@ -146,18 +149,16 @@ while i < int(info_proyectos["metadata"]["length"]):
     t["hdd_uso"] = 0
     t["hdd_total"] = 0
 
-    if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) == 0:
-        i+=1
-    else:
-        print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"])
+    if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) > 0:
+        #print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"])
         #print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]))
         if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]) > 0:
             if "resources" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"].keys():
                 #print(type(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
-                print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
+                #print(len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]))
                 if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]) > 0:
                     for nn  in range (0,len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"])):
-                        print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
+                        #print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
                         if "limits" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys():
                             total = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["limits"]
                         else:
@@ -175,8 +176,22 @@ while i < int(info_proyectos["metadata"]["length"]):
                             t["hdd_uso"] = uso
                             t["hdd_total"] = total
                             continue
-        i+=1 
+                        if info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["resource_type"] == "VMS":
+                            t["vms"] = uso
+                            continue
+    pp = "pr" + str(i)
+    tabla_proyectos[pp] = t
+    #print(json.dumps(t, indent=2))
+    #print(json.dumps(tabla_proyectos["pr"+str(i)], indent=2))
+    print(json.dumps(tabla_proyectos, indent=2))
+    i += 1 
 
+## Tabla lista
+
+# for pp in tabla_proyectos:
+#     print(pp)
+# #     print(json.dumps(tabla_proyectos[pp], indent=2))
+# print(json.dumps(tabla_proyectos, indent=2))
 
 #  with open(pars['sourcecsv']) as csv_file:
 #         csv_reader = csv.reader(csv_file, delimiter=',')
