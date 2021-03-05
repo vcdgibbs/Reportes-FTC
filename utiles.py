@@ -144,7 +144,7 @@ def printLog(msg):
 
 def Prism_API_Call(Method, URL, Credentials, Payload=None):
     #printInfo("Making a " + Method + " call to " + URL)
-    headers = {'ContentType':'application/json','Accept':'application/json'}
+    headers = {'ContentType':'application/json','cache-control': 'no-cache','Accept':'application/json'}
     us=Credentials["User"]
     pw=Credentials["Password"]
    

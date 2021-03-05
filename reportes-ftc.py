@@ -181,13 +181,16 @@ while i < int(info_proyectos["metadata"]["length"]):
                             continue
     pp = "pr" + str(i)
     tabla_proyectos[pp] = t
+    #   print(pp)
     #print(json.dumps(t, indent=2))
     #print(json.dumps(tabla_proyectos["pr"+str(i)], indent=2))
-    print(json.dumps(tabla_proyectos, indent=2))
+    #print(json.dumps(tabla_proyectos, indent=2))
+    ### NPI por qué debo limpiar el Dict. "t", pero bueno...
+    t ={}
     i += 1 
 
 ## Tabla lista
-
+print(json.dumps(tabla_proyectos, indent=2))
 # for pp in tabla_proyectos:
 #     print(pp)
 # #     print(json.dumps(tabla_proyectos[pp], indent=2))
