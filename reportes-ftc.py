@@ -102,7 +102,7 @@ pl={"kind":"project"}
 try:
     info_proyectos = Prism_API_Call("POST",comURL,PrismCreds,pl)
     # Control: está rescatando lo correcto?
-    #print(json.dumps(info_proyectos, indent=2))
+    print(json.dumps(info_proyectos, indent=2))
 
 except:
         printError("Something get wrong, finishing")
@@ -159,8 +159,10 @@ while i < int(info_proyectos["metadata"]["length"]):
                 if len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"]) > 0:
                     for nn  in range (0,len(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"])):
                         #print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys())
-                        if "limits" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys():
-                            total = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["limits"]
+                        print(info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn])
+                        if "limit" in info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn].keys():
+                            total = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["limit"]
+                            #print(total)
                         else:
                             total = 0 
                         uso = info_proyectos["entities"][i]["status"]["resources"]["resource_domain"]["resources"][nn]["value"]
